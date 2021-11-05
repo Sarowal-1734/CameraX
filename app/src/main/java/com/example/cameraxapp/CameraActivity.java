@@ -2,7 +2,7 @@ package com.example.cameraxapp;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Size;
+import android.util.Rational;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
@@ -44,14 +43,18 @@ public class CameraActivity extends AppCompatActivity {
         buttonCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File photoFile = new File(getCacheDir().getAbsolutePath(), "NID.jpg");
+                //File photoFile = new File(getCacheDir().getAbsolutePath(), "NID.jpg");
+                File folder = new File(getFilesDir(), "ImagesFolder");
+                if (!folder.exists()) {
+                    folder.mkdir();
+                }
+                File photoFile = new File(folder, "NID.jpg");
                 ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
                 imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(CameraActivity.this),
                         new ImageCapture.OnImageSavedCallback() {
                             @Override
                             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                                 Uri imageUri = Uri.fromFile(photoFile);
-                                Toast.makeText(CameraActivity.this, imageUri.toString(), Toast.LENGTH_LONG).show();
                                 ImageView imageView = findViewById(R.id.imageView);
                                 imageView.setImageURI(imageUri);
                             }
@@ -81,14 +84,14 @@ public class CameraActivity extends AppCompatActivity {
                     imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY).build();
                     // Choose the camera Front or Back
                     CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
-                    // Set image dimension
-                    ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().setTargetResolution(new Size(300, 250)).build(); // doesn't work
+                    // Set image dimension according to the preview
+                    imageCapture.setCropAspectRatio(new Rational(350, 200));
                     // Connect the preview use case to the previewView
                     preview.setSurfaceProvider(mPreviewView.getSurfaceProvider());
                     // Unbind use cases before rebinding
                     cameraProvider.unbindAll();
                     // Bind use cases to camera
-                    cameraProvider.bindToLifecycle((LifecycleOwner) CameraActivity.this, cameraSelector, preview, imageAnalysis, imageCapture);
+                    cameraProvider.bindToLifecycle((LifecycleOwner) CameraActivity.this, cameraSelector, preview, imageCapture);
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }

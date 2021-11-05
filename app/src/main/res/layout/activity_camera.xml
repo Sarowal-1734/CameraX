@@ -10,8 +10,8 @@
 
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"/>
+        android:layout_width="350dp"
+        android:layout_height="200dp" />
 
     <Button
         android:id="@+id/buttonCaptureImage"
@@ -19,14 +19,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#F37DA5"
         android:text="Capture"
         android:textColor="@color/black" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        />
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter" />
 
 </LinearLayout>
