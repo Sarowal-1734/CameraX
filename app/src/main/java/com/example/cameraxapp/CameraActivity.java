@@ -60,6 +60,7 @@ public class CameraActivity extends AppCompatActivity {
         textViewReTake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imageViewPreviewImage.setImageURI(null);
                 imageViewPreviewImage.setVisibility(View.GONE);
                 mPreviewView.setVisibility(View.VISIBLE);
                 imageViewCaptureImage.setEnabled(true);
