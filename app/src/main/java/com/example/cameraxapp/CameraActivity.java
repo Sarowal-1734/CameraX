@@ -1,11 +1,12 @@
 package com.example.cameraxapp;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Rational;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,49 +27,87 @@ import java.util.concurrent.ExecutionException;
 
 public class CameraActivity extends AppCompatActivity {
 
+    private ImageView imageViewCaptureImage;
+    private ImageView imageViewPreviewImage;
+    private TextView textViewReTake;
+    private TextView textViewNext;
+
     private PreviewView mPreviewView;
-    private Button buttonCaptureImage;
-    ImageCapture imageCapture;
+    private ImageCapture imageCapture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        imageViewCaptureImage = findViewById(R.id.imageViewCaptureImage);
+        textViewReTake = findViewById(R.id.textViewReTake);
+        textViewNext = findViewById(R.id.textViewNext);
         mPreviewView = findViewById(R.id.previewView);
-        buttonCaptureImage = findViewById(R.id.buttonCaptureImage);
 
+        // Initialize the camera preview
         startCamera();
 
-        buttonCaptureImage.setOnClickListener(new View.OnClickListener() {
+        // Capture image on bitton click
+        imageViewCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //File photoFile = new File(getCacheDir().getAbsolutePath(), "NID.jpg");
-                File folder = new File(getFilesDir(), "ImagesFolder");
-                if (!folder.exists()) {
-                    folder.mkdir();
-                }
-                File photoFile = new File(folder, "NID.jpg");
-                ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-                imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(CameraActivity.this),
-                        new ImageCapture.OnImageSavedCallback() {
-                            @Override
-                            public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                                Uri imageUri = Uri.fromFile(photoFile);
-                                ImageView imageView = findViewById(R.id.imageView);
-                                imageView.setImageURI(imageUri);
-                            }
+                takePicture();
+            }
+        });
 
-                            @Override
-                            public void onError(@NonNull ImageCaptureException exception) {
-                                Toast.makeText(CameraActivity.this, "Failed to capture image!", Toast.LENGTH_SHORT).show();
-                                exception.printStackTrace();
-                            }
-                        });
+        // Capture image on bitton click
+        textViewReTake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageViewPreviewImage.setVisibility(View.GONE);
+                mPreviewView.setVisibility(View.VISIBLE);
+                imageViewCaptureImage.setEnabled(true);
+                imageViewCaptureImage.clearColorFilter();
+                textViewNext.setEnabled(false);
+                textViewNext.setTextColor(Color.GRAY);
+                textViewReTake.setEnabled(false);
+                textViewReTake.setTextColor(Color.GRAY);
+            }
+        });
+
+        // Capture image on bitton click
+        textViewNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(CameraActivity.this, "Next Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
     }// Ending onCreate
+
+    private void takePicture() {
+        File photoFile = new File(getCacheDir().getAbsolutePath(), "NIDFRONT.jpg");
+        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
+        imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(CameraActivity.this),
+                new ImageCapture.OnImageSavedCallback() {
+                    @Override
+                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                        Uri imageUri = Uri.fromFile(photoFile);
+                        imageViewPreviewImage = findViewById(R.id.imageView);
+                        mPreviewView.setVisibility(View.GONE);
+                        imageViewPreviewImage.setVisibility(View.VISIBLE);
+                        imageViewPreviewImage.setImageURI(imageUri);
+                        imageViewCaptureImage.setEnabled(false);
+                        imageViewCaptureImage.setColorFilter(Color.GRAY);
+                        textViewNext.setEnabled(true);
+                        textViewNext.setTextColor(Color.BLACK);
+                        textViewReTake.setEnabled(true);
+                        textViewReTake.setTextColor(Color.BLACK);
+                    }
+
+                    @Override
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        Toast.makeText(CameraActivity.this, "Failed to capture image!", Toast.LENGTH_SHORT).show();
+                        exception.printStackTrace();
+                    }
+                });
+    }
 
     private void startCamera() {
         final ListenableFuture<ProcessCameraProvider> cameraProviderListenableFuture = ProcessCameraProvider.getInstance(this);

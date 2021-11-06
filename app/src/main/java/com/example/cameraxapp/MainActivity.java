@@ -43,8 +43,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void verifyPermissions() {
-        String[] permissions = {Manifest.permission.CAMERA};
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if ((ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[1]) == PackageManager.PERMISSION_GRANTED)) {
             mPermissions = true;
             init();
         } else {
