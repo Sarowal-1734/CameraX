@@ -25,7 +25,7 @@
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="5">
 
         <TextView
             android:id="@+id/textViewReTake"
@@ -37,23 +37,43 @@
             android:enabled="false"
             android:focusable="true"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="8dp"
             android:text="Retake"
             android:textColor="@color/gray"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageViewChangeCamera"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_flip_camera" />
 
         <ImageView
             android:id="@+id/imageViewCaptureImage"
             android:layout_width="0dp"
             android:layout_height="66dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_camera" />
+
+        <ImageView
+            android:id="@+id/imageViewFlashMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_flash_on" />
 
         <TextView
             android:id="@+id/textViewNext"
@@ -65,10 +85,10 @@
             android:enabled="false"
             android:focusable="true"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="8dp"
             android:text="Next"
             android:textColor="@color/gray"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
 
